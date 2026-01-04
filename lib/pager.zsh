@@ -84,12 +84,13 @@ zvm_open_less() {
   
   # Always pipe through ZVM_MAN_PAGER to override system MANPAGER
   # This prevents issues when MANPAGER is set to nvim/vim but ZVM_MAN_PAGER is less
+  # Use -R to pass through raw escape sequences (needed for LESS_TERMCAP_* colors)
   if [[ -n "$pattern" ]]; then
-    MANPAGER=cat man "$man_page" 2>/dev/null | ${ZVM_MAN_PAGER} -p "${pattern}" 2>/dev/null || \
-      MANPAGER=cat man "$man_page" 2>/dev/null | ${ZVM_MAN_PAGER} || \
+    MANPAGER=cat man "$man_page" 2>/dev/null | ${ZVM_MAN_PAGER} -R -p "${pattern}" 2>/dev/null || \
+      MANPAGER=cat man "$man_page" 2>/dev/null | ${ZVM_MAN_PAGER} -R || \
       return 1
   else
-    MANPAGER=cat man "$man_page" 2>/dev/null | ${ZVM_MAN_PAGER} || return 1
+    MANPAGER=cat man "$man_page" 2>/dev/null | ${ZVM_MAN_PAGER} -R || return 1
   fi
   
   return 0
